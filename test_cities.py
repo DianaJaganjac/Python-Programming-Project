@@ -25,3 +25,9 @@ def test_swap_cities():
 		("Connecticut",	"Hartford", 41.767, -72.677)]
 
     assert swap_cities(road_map2)==[("Connecticut", "Hartford", 41.767, -72.677),("Colorado", "Denver", 39.7391667, -104.984167),("California", "Sacramento", 38.555605, -121.468926)]
+
+def test_shift_cities():
+    
+    road_map3 = [("California",	"Sacramento", 38.555605, -121.468926),("Delaware", "Dover", 39.161921, -75.526755),("Florida", "Tallahassee", 30.4518, -84.27277)]
+
+    assert shift_cities(road_map3)==[("Florida","Tallahassee", 30.4518, -84.27277),("California", "Sacramento", 38.555605, -121.468926),("Delaware", "Dover", 39.161921, -75.526755)]
