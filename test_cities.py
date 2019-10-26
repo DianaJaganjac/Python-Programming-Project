@@ -18,3 +18,10 @@ def test_compute_total_distance():
 		                           
     assert compute_total_distance(road_map4)==\
            pytest.approx(16.484 + 32.307 + 48.791, 0.01)
+
+def test_swap_cities():
+    road_map2 = [("California", "Sacramento", 38.555605, -121.468926),\
+		("Colorado", "Denver", 39.7391667, -104.984167),\
+		("Connecticut",	"Hartford", 41.767, -72.677)]
+
+    assert swap_cities(road_map2)==[("Connecticut", "Hartford", 41.767, -72.677),("Colorado", "Denver", 39.7391667, -104.984167),("California", "Sacramento", 38.555605, -121.468926)]
