@@ -4,6 +4,7 @@ Created on Thu Dec 26 10:13:53 2019
 
 @author: Diana Jaganjac
 """
+import random as rand
 
 def read_cities(file_name):
     """
@@ -22,7 +23,7 @@ def read_cities(file_name):
     for line in lines:
         line = line.strip("\n")
         ele = line.split("\t")
-        joinele = (ele[0]), (ele[1]), (ele[2]), (ele[3])
+        joinele = (ele[0]), (ele[1]), float(ele[2]), float(ele[3])
         result.append(joinele)
     result.append(result[0])
     return (result)
@@ -36,21 +37,16 @@ def print_cities(road_map):
     Prints a list of cities, along with their locations. 
     Print only one or two digits after the decimal point.
     """
-    f = open(road_map)
-    lines = f.readlines()
     result = []
-    for line in lines:
-        line = line.strip("\n")
-        ele = line.split("\t")
-        rm = ((ele[1]), ((ele[2])), ((ele[3])))
+    for ele in road_map:
+        rm = ((ele[1]), (round(ele[2],2)), (round(ele[3],2)))
         result.append(rm)    
     result.append(result[0])    
-
     return result
-    f.close
 
-x = print_cities(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
-print(x)
+
+road_map = print_cities(z)
+#print(road_map)
     
 
 def compute_total_distance(road_map):
@@ -78,7 +74,7 @@ def compute_total_distance(road_map):
     return dist
     
     
-d = compute_total_distance(x)
+#d = compute_total_distance(road_map)
 #print(d)
 
 def swap_cities(road_map, index1, index2):
@@ -97,6 +93,9 @@ def swap_cities(road_map, index1, index2):
     
     road_map.insert(index1, sec_ele)
     road_map.insert(index2, first_ele)
+    
+    if index1 == index2:
+        pass
     
     import math
     coords = []
@@ -117,7 +116,7 @@ def swap_cities(road_map, index1, index2):
     return (road_map, dist)
    
 
-n = swap_cities(x, 0, 0)
+#n = swap_cities(x, 0, 0)
 #print(n)
         
 def shift_cities(road_map):
@@ -126,14 +125,12 @@ def shift_cities(road_map):
     to the position i+1. The city at the last position moves to the position
     0. Return the new road map. 
     """
-    #road_map.insert(0, road_map.pop())
-    #return road_map
-    string[i % len(string)]
+        
+    road_map.insert(0, road_map.pop())
+    return road_map
     
-    print(last)
-
-g = shift_cities(x)
-print(g)
+#g = shift_cities(road_map)
+#print(g)
     
 def find_best_cycle(road_map):
     """
@@ -142,7 +139,33 @@ def find_best_cycle(road_map):
     After `10000` swaps/shifts, return the best cycle found so far.
     Use randomly generated indices for swapping.
     """
-    pass
+    number = rand.randint(0,50)
+    best_cycle_1 = 20000000
+    best_cycle_2 = 20000000
+    current_cycle_1 = 0
+    current_cycle_2 = 0
+    
+    for i in range(10000):
+        
+        swap_cities(road_map, number, number)
+        current_cycle_1 = compute_total_distance(road_map)
+        if current_cycle_1 < best_cycle_1:
+            best_cycle_1 = current_cycle_1
+    
+        shift_cities(road_map)
+        current_cycle_2 = compute_total_distance(road_map)
+        if current_cycle_2 < best_cycle_2:
+            best_cycle_2 = current_cycle_2
+    
+    if best_cycle_1 < best_cycle_2:
+        return best_cycle_1
+    else:
+        return best_cycle_2
+
+#s = find_best_cycle(road_map)
+#print(s)     
+        
+
 
 def print_map(road_map):
     """
@@ -150,7 +173,16 @@ def print_map(road_map):
     their connections, along with the cost for each connection 
     and the total cost.
     """
-    pass
+    city = road_map.split(',')
+    return city
+
+
+
+
+
+c = print_map(road_map)
+print(c)
+  
 
 def main():
     """
