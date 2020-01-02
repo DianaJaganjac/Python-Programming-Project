@@ -4,44 +4,26 @@ Created on Fri Dec 27 13:20:39 2019
 
 @author: Diana Jaganjac
 """
+import random 
 
-def read_cities(file_name):
-    """
-    Read in the cities from the given `file_name`, and return 
-    them as a list of four-tuples: 
+d = [1,2,3,4,5,7,3,4]
 
-      [(state, city, latitude, longitude), ...] 
+N = (len(d)-1)
 
-    Use this as your initial `road_map`, that is, the cycle 
+number = int(N * random.random())
+print(number)
 
-      Alabama -> Alaska -> Arizona -> ... -> Wyoming -> Alabama.
-    """
-    f = open(file_name)
-    lines = f.readlines()
-    result = []
-    for line in lines:
-        line = line.strip("\n")
-        ele = line.split("\t")
-        joinele = (ele[0]), (ele[1]), float(ele[2]), float(ele[3])
-        result.append(joinele)
-    result.append(result[0])
-    return (result)
-    f.close
+ current_cycle_1 = compute_total_distance(road_map)
+        if current_cycle_1 < best_cycle_1:
+            best_cycle_1 = current_cycle_1
     
-z = read_cities(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
-#print(z)
-  
-def print_cities(road_map):
-    """
-    Prints a list of cities, along with their locations. 
-    Print only one or two digits after the decimal point.
-    """
-    result = []
-    for ele in road_map:
-        rm = ((ele[1]), (round(ele[2],2)), (round(ele[3],2)))
-        result.append(rm)        
-    return result
+        cycle2 = shift_cities(road_map)
+        current_cycle_2 = compute_total_distance(road_map)
+        if current_cycle_2 < best_cycle_2:
+            best_cycle_2 = current_cycle_2
+    
+    if best_cycle_1 < best_cycle_2:
+        return cycle1, current_cycle_1
+    else:
+        return cycle2, current_cycle_2
 
-
-road_map = print_cities(z)
-print(road_map[1])
