@@ -5,6 +5,7 @@ Created on Thu Dec 26 10:13:53 2019
 """
 import random as rand
 from sys import maxsize
+import copy
 
 def read_cities(file_name):
     """
@@ -42,7 +43,6 @@ def print_cities(road_map):
 
 road_map = print_cities(z)
 #print(road_map)
-    
 
 def compute_total_distance(road_map):
     """
@@ -67,9 +67,9 @@ def compute_total_distance(road_map):
         dist += math.sqrt((xy[r][0]-xy[r+1][0])**2 + (xy[r][1]-xy[r+1][1])**2)
     
     return round(dist, 2)
-    
-    
-d = compute_total_distance(road_map)
+
+new_road_map = [ ('Tallahassee', 30.4518, -84.27277),('Boston', 42.2352, -71.0275)] 
+d = compute_total_distance(new_road_map)
 #print(d)
 
 def swap_cities(road_map, index1, index2):
@@ -81,7 +81,7 @@ def swap_cities(road_map, index1, index2):
     Allow for the possibility that `index1=index2`,
     and handle this case correctly.
     """
-    new_road_map = road_map
+    new_road_map = copy.deepcopy(road_map)
     
     if index1 == index2:
         pass
@@ -91,10 +91,11 @@ def swap_cities(road_map, index1, index2):
         new_road_map[index2], new_road_map[index1] = original 
     new_total_distance = compute_total_distance(new_road_map)
     
+    #print(road_map)
     return (new_road_map, new_total_distance)
    
 
-#n = swap_cities(road_map, 0, 3)
+n = swap_cities(road_map, 0, 3)
 #print(n)
         
 def shift_cities(road_map):
@@ -103,14 +104,16 @@ def shift_cities(road_map):
     to the position i+1. The city at the last position moves to the position
     0. Return the new road map. 
     """
-        
-    road_map.insert(0, road_map.pop())
-    new_dist = compute_total_distance(road_map)
+    for i in range(5):
+        road_map.insert(0, road_map.pop())
+        #print(road_map)
+        #print()
+        new_dist = compute_total_distance(road_map)
     return (road_map, new_dist)
 
 #for i in range(5):   
-#    g = shift_cities(road_map)
-#    print(g)
+#g = shift_cities(road_map)
+#print(g)
     
 def find_best_cycle(road_map):
     """
@@ -118,16 +121,18 @@ def find_best_cycle(road_map):
     try `10000` swaps/shifts, and each time keep the best cycle found so far. 
     After `10000` swaps/shifts, return the best cycle found so far.
     Use randomly generated indices for swapping.
-    """
-    number1 = rand.randint(0,(len(road_map)-1))
-    number2 = rand.randint(0,(len(road_map)-1))
-    
+    """  
     shortest_dist = maxsize
-    
     best_cycle = road_map
     
     for n in range(0, 10000):
+        
+        number1 = rand.randint(0,(len(road_map)-1))
+        number2 = rand.randint(0,(len(road_map)-1))
+        
         (cycle1, dist_1) = swap_cities(best_cycle, number1, number2)
+#        print(number1, number2)
+#        print(cycle1, dist_1)
         
         if dist_1 < shortest_dist:
             shortest_dist = dist_1
@@ -141,9 +146,10 @@ def find_best_cycle(road_map):
             
     return best_cycle
 
-
+#s = find_best_cycle(road_map)
+#print(s)
 #alist = []
-#for i in range(10):
+#for i in range(50):
 #    s = find_best_cycle(road_map)
 #    alist.append(s)
 #print(alist)
@@ -210,8 +216,8 @@ def main(file_name):
         
         file = read_cities(file_name)
         road_map = print_cities(file)
-        print(road_map)
-        print()
+        #print(road_map)
+        #print()
 
         result = find_best_cycle(road_map)
         result.append(result[0])
