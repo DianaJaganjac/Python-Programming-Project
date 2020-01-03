@@ -68,8 +68,8 @@ def compute_total_distance(road_map):
     
     return round(dist, 2)
 
-new_road_map = [ ('Tallahassee', 30.4518, -84.27277),('Boston', 42.2352, -71.0275)] 
-d = compute_total_distance(new_road_map)
+#new_road_map = [ ('Tallahassee', 30.4518, -84.27277),('Boston', 42.2352, -71.0275)] 
+#d = compute_total_distance(new_road_map)
 #print(d)
 
 def swap_cities(road_map, index1, index2):
@@ -83,20 +83,29 @@ def swap_cities(road_map, index1, index2):
     """
     new_road_map = copy.deepcopy(road_map)
     
-    if index1 == index2:
-        pass
-    
     if index1 != index2:
         original = new_road_map[index1], new_road_map[index2]
-        new_road_map[index2], new_road_map[index1] = original 
+        new_road_map[index2], new_road_map[index1] = original
+        
+    if index1 == index2:
+        pass
+
     new_total_distance = compute_total_distance(new_road_map)
     
     #print(road_map)
     return (new_road_map, new_total_distance)
    
 
-n = swap_cities(road_map, 0, 3)
-#print(n)
+#road_map = [('Saint Paul', 44.95, -93.09), ('Jackson', 32.32, -90.21), \
+#                         ('Jefferson City', 38.57, -92.19), ('Helana', 46.6, -112.03),\
+#                         ('Lincoln', 40.81, -96.68), ('Carson City', 39.16, -119.75),\
+#                         ('Concord', 43.22, -71.55), ('Trenton', 40.22, -74.76),\
+#                         ('Santa Fe', 35.67, -105.96), ('Albany', 42.66, -73.78)]
+#
+#h = swap_cities(road_map, 4, 4)
+#print(h)
+    
+
         
 def shift_cities(road_map):
     """
@@ -104,16 +113,18 @@ def shift_cities(road_map):
     to the position i+1. The city at the last position moves to the position
     0. Return the new road map. 
     """
-    for i in range(5):
-        road_map.insert(0, road_map.pop())
-        #print(road_map)
-        #print()
-        new_dist = compute_total_distance(road_map)
+
+    road_map.insert(0, road_map.pop())
+    new_dist = compute_total_distance(road_map)
     return (road_map, new_dist)
 
-#for i in range(5):   
-#g = shift_cities(road_map)
-#print(g)
+
+
+new_road_map = [('Carson City', 39.16, -119.75), ('Carson City', 39.16, -119.75),
+                    ('Concord', 43.22, -71.55),('Trenton', 40.22, -74.76), \
+                    ('Santa Fe', 35.67, -105.96), ('Santa Fe', 35.67, -105.96)]
+g = shift_cities(new_road_map)
+print(g)
     
 def find_best_cycle(road_map):
     """
@@ -227,6 +238,6 @@ def main(file_name):
 
         
     
-
-final = main(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
-print(final)
+#
+#final = main(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
+#print(final)
