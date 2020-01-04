@@ -27,3 +27,4 @@ print(number)
     else:
         return cycle2, current_cycle_2
 
+#BBox = ((coords.long.min(),coords.long.max(), coords.lat.min(), coords.lat.max()))

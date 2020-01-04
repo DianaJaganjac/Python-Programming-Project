@@ -7,6 +7,8 @@ import random as rand
 from sys import maxsize
 import copy
 
+
+
 def read_cities(file_name):
     """
     Read in the cities from the given `file_name`, and return 
@@ -120,11 +122,11 @@ def shift_cities(road_map):
 
 
 
-new_road_map = [('Carson City', 39.16, -119.75), ('Carson City', 39.16, -119.75),
-                    ('Concord', 43.22, -71.55),('Trenton', 40.22, -74.76), \
-                    ('Santa Fe', 35.67, -105.96), ('Santa Fe', 35.67, -105.96)]
-g = shift_cities(new_road_map)
-print(g)
+#new_road_map = [('Carson City', 39.16, -119.75), ('Carson City', 39.16, -119.75),
+#                    ('Concord', 43.22, -71.55),('Trenton', 40.22, -74.76), \
+#                    ('Santa Fe', 35.67, -105.96), ('Santa Fe', 35.67, -105.96)]
+#g = shift_cities(new_road_map)
+#print(g)
     
 def find_best_cycle(road_map):
     """
@@ -159,11 +161,11 @@ def find_best_cycle(road_map):
 
 #s = find_best_cycle(road_map)
 #print(s)
-#alist = []
-#for i in range(50):
-#    s = find_best_cycle(road_map)
-#    alist.append(s)
-#print(alist)
+alist = []
+for i in range(50):
+    s = find_best_cycle(road_map)
+    alist.append(s)
+print(alist)
    
         
 def distance_cities(road_map):
@@ -222,7 +224,7 @@ def main(file_name):
     Reads in, and prints out, the city data, then creates the "best"
     cycle and prints it out.
     """
-
+ 
     if __name__ == "__main__": #keep this in
         
         file = read_cities(file_name)
@@ -235,9 +237,8 @@ def main(file_name):
         total_cost = compute_total_distance(result)
         
         return f"The best cycle is {result} with a total cost of {total_cost}"
-
         
-    
-#
 #final = main(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
 #print(final)
+        
+#def visualise(road_map):
