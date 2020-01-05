@@ -6,6 +6,11 @@ Created on Thu Dec 26 10:13:53 2019
 import random as rand
 from sys import maxsize
 import copy
+import pandas as pd
+import geopandas as gpd
+import matplotlib.pyplot as plt
+from shapely.geometry import Point, LineString
+import math
 
 
 
@@ -38,7 +43,7 @@ def print_cities(road_map):
     """
     result = []
     for ele in road_map:
-        rm = ((ele[1]), (round(ele[2],2)), (round(ele[3],2)))
+        rm = ((ele[1]), (round(ele[2],1)), (round(ele[3],1)))
         result.append(rm)        
     return result
 
@@ -52,7 +57,6 @@ def compute_total_distance(road_map):
     the connections in the `road_map`. Remember that it's a cycle, so that 
     (for example) in the initial `road_map`, Wyoming connects to Alabama...
     """
-    import math
     coords = []
     for i in road_map:
         coords.append(i[1])
@@ -68,7 +72,7 @@ def compute_total_distance(road_map):
     for r in range(len(xy)-1):
         dist += math.sqrt((xy[r][0]-xy[r+1][0])**2 + (xy[r][1]-xy[r+1][1])**2)
     
-    return round(dist, 2)
+    return round(dist, 1)
 
 #new_road_map = [ ('Tallahassee', 30.4518, -84.27277),('Boston', 42.2352, -71.0275)] 
 #d = compute_total_distance(new_road_map)
@@ -161,15 +165,14 @@ def find_best_cycle(road_map):
 
 #s = find_best_cycle(road_map)
 #print(s)
-alist = []
-for i in range(50):
-    s = find_best_cycle(road_map)
-    alist.append(s)
-print(alist)
+#alist = []
+#for i in range(10):
+#    s = find_best_cycle(road_map)
+#    alist.append(s)
+#print(alist)
    
         
 def distance_cities(road_map):
-    import math
     
     coords = []
     ind = []
@@ -184,7 +187,7 @@ def distance_cities(road_map):
     
     for r in range(len(xy)-1):
         dist = math.sqrt((xy[r][0]-xy[r+1][0])**2 + (xy[r][1]-xy[r+1][1])**2)
-        rounded = round(dist, 2)
+        rounded = round(dist, 1)
         ind.append(rounded)
         
     return ind
@@ -241,4 +244,49 @@ def main(file_name):
 #final = main(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
 #print(final)
         
-#def visualise(road_map):
+def visualise(road_map):
+    fp = (r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\states_21basic\states.shp")
+    map_df = gpd.read_file(fp)
+    
+    df = pd.read_csv(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.csv", header=0)
+    data_for_map = df.rename(index=str, columns={"State": "state", "City": "city", "Lat": "lat", "Long":"long"})
+    merged = map_df.set_index("STATE_NAME").join(data_for_map.set_index("state"))
+    data = merged.drop(["District of Columbia"])
+    
+    geometry = [Point(xy) for xy in zip(data["long"], data["lat"])]
+    geo_df = gpd.GeoDataFrame(data, geometry = geometry)
+   
+    dots = []
+    d = find_best_cycle(road_map)
+    d.append(d[0])
+    
+    for i in d:
+        dots.append(i[1])
+        dots.append(i[2])
+    
+    x = [float(r) for r in dots[0::2]]
+    y = [float(r) for r in dots[1::2]]
+    xy = list(zip(y,x))
+    
+    start = [Point(xy[0])]
+    start_df = gpd.GeoDataFrame(geometry = start)
+
+    line = [LineString(xy)]
+    line_df = gpd.GeoDataFrame(geometry = line)
+    line_df.to_file("line.shp")
+    
+    route = (r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\line.shp")
+    route_df = gpd.read_file(route)
+    route_df.crs = ({'init': 'epsg:4269'})
+
+    fig, ax = plt.subplots(figsize=(14, 6))
+    map_df.plot(ax=ax)
+    geo_df.plot(ax = ax, markersize = 10, color = "red", marker = "o", label = "US Capital Cities")
+    start_df.plot(ax = ax, marker = "*", color = "yellow", markersize = 15, label = "Starting Point")
+    route_df.plot(ax = ax, linewidth = 1, color = "orange", label = "Route Map")
+    plt.legend()
+    plt.title("Travelling Salesman Solution")
+
+
+d = visualise(road_map)
+print(d)
