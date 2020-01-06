@@ -74,7 +74,6 @@ def compute_total_distance(road_map):
     
     return round(dist, 1)
 
-#new_road_map = [ ('Tallahassee', 30.4518, -84.27277),('Boston', 42.2352, -71.0275)] 
 #d = compute_total_distance(new_road_map)
 #print(d)
 
@@ -90,28 +89,18 @@ def swap_cities(road_map, index1, index2):
     new_road_map = copy.deepcopy(road_map)
     
     if index1 != index2:
-        original = new_road_map[index1], new_road_map[index2]
-        new_road_map[index2], new_road_map[index1] = original
+        position = new_road_map[index1], new_road_map[index2]
+        new_road_map[index2], new_road_map[index1] = position
         
     if index1 == index2:
         pass
 
     new_total_distance = compute_total_distance(new_road_map)
     
-    #print(road_map)
     return (new_road_map, new_total_distance)
    
-
-#road_map = [('Saint Paul', 44.95, -93.09), ('Jackson', 32.32, -90.21), \
-#                         ('Jefferson City', 38.57, -92.19), ('Helana', 46.6, -112.03),\
-#                         ('Lincoln', 40.81, -96.68), ('Carson City', 39.16, -119.75),\
-#                         ('Concord', 43.22, -71.55), ('Trenton', 40.22, -74.76),\
-#                         ('Santa Fe', 35.67, -105.96), ('Albany', 42.66, -73.78)]
-#
-#h = swap_cities(road_map, 4, 4)
+#h = swap_cities(road_map, 0, 4)
 #print(h)
-    
-
         
 def shift_cities(road_map):
     """
@@ -124,11 +113,6 @@ def shift_cities(road_map):
     new_dist = compute_total_distance(road_map)
     return (road_map, new_dist)
 
-
-
-#new_road_map = [('Carson City', 39.16, -119.75), ('Carson City', 39.16, -119.75),
-#                    ('Concord', 43.22, -71.55),('Trenton', 40.22, -74.76), \
-#                    ('Santa Fe', 35.67, -105.96), ('Santa Fe', 35.67, -105.96)]
 #g = shift_cities(new_road_map)
 #print(g)
     
@@ -148,8 +132,6 @@ def find_best_cycle(road_map):
         number2 = rand.randint(0,(len(road_map)-1))
         
         (cycle1, dist_1) = swap_cities(best_cycle, number1, number2)
-#        print(number1, number2)
-#        print(cycle1, dist_1)
         
         if dist_1 < shortest_dist:
             shortest_dist = dist_1
@@ -163,8 +145,8 @@ def find_best_cycle(road_map):
             
     return best_cycle
 
-#s = find_best_cycle(road_map)
-#print(s)
+s = find_best_cycle(road_map)
+print(s)
 #alist = []
 #for i in range(10):
 #    s = find_best_cycle(road_map)
@@ -206,8 +188,6 @@ def print_map(road_map):
     cities = find_best_cycle(road_map)
     cost = distance_cities(cities)
     
-    
-    
     for i in range(len(cities)-1):
          indc = cost[i]
          endvar = f"The cost from {cities[i][0]} to {cities[i+1][0]} is {indc}."
@@ -232,28 +212,26 @@ def main(file_name):
         
         file = read_cities(file_name)
         road_map = print_cities(file)
-        #print(road_map)
-        #print()
-
+        print()
+        
         result = find_best_cycle(road_map)
         result.append(result[0])
         total_cost = compute_total_distance(result)
         
         return f"The best cycle is {result} with a total cost of {total_cost}"
         
-#final = main(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
-#print(final)
+final = main(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
+print(final)
         
 def visualise(road_map):
     fp = (r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\states_21basic\states.shp")
     map_df = gpd.read_file(fp)
     
     df = pd.read_csv(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.csv", header=0)
-    data_for_map = df.rename(index=str, columns={"State": "state", "City": "city", "Lat": "lat", "Long":"long"})
-    merged = map_df.set_index("STATE_NAME").join(data_for_map.set_index("state"))
+    merged = map_df.set_index("STATE_NAME").join(df.set_index("State"))
     data = merged.drop(["District of Columbia"])
     
-    geometry = [Point(xy) for xy in zip(data["long"], data["lat"])]
+    geometry = [Point(xy) for xy in zip(data["Long"], data["Lat"])]
     geo_df = gpd.GeoDataFrame(data, geometry = geometry)
    
     dots = []
@@ -268,6 +246,13 @@ def visualise(road_map):
     y = [float(r) for r in dots[1::2]]
     xy = list(zip(y,x))
     
+    n = []
+    count = 0
+    for i in xy:
+        count +=1
+        n.append(count)
+    n.remove(n[-1])
+
     start = [Point(xy[0])]
     start_df = gpd.GeoDataFrame(geometry = start)
 
@@ -279,13 +264,17 @@ def visualise(road_map):
     route_df = gpd.read_file(route)
     route_df.crs = ({'init': 'epsg:4269'})
 
-    fig, ax = plt.subplots(figsize=(14, 6))
+    fig, ax = plt.subplots(figsize=(28, 12))
     map_df.plot(ax=ax)
     geo_df.plot(ax = ax, markersize = 10, color = "red", marker = "o", label = "US Capital Cities")
-    start_df.plot(ax = ax, marker = "*", color = "yellow", markersize = 15, label = "Starting Point")
+    start_df.plot(ax = ax, marker = "*", color = "yellow", markersize = 20, label = "Starting Point")
     route_df.plot(ax = ax, linewidth = 1, color = "orange", label = "Route Map")
+    for i, txt in enumerate(n):
+        ax.annotate(txt, (xy[i]), fontsize = 8)
     plt.legend()
     plt.title("Travelling Salesman Solution")
+    
+    return ax
 
 
 d = visualise(road_map)
