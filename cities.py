@@ -33,7 +33,7 @@ def read_cities(file_name):
     return (result)
     f.close
     
-z = read_cities(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
+z = read_cities(r"city-data.txt")
 #print(z)
   
 def print_cities(road_map):
@@ -220,14 +220,14 @@ def main(file_name):
         
         return f"The best cycle is {result} with a total cost of {total_cost}"
         
-final = main(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.txt")
+final = main(r"city-data.txt")
 print(final)
         
 def visualise(road_map):
-    fp = (r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\states_21basic\states.shp")
+    fp = (r"states.shp")
     map_df = gpd.read_file(fp)
     
-    df = pd.read_csv(r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\city-data.csv", header=0)
+    df = pd.read_csv(r"city-data.csv", header=0)
     merged = map_df.set_index("STATE_NAME").join(df.set_index("State"))
     data = merged.drop(["District of Columbia"])
     
@@ -260,7 +260,7 @@ def visualise(road_map):
     line_df = gpd.GeoDataFrame(geometry = line)
     line_df.to_file("line.shp")
     
-    route = (r"C:\Users\Diana Jaganjac\pop-one-project-djagan01\line.shp")
+    route = (r"line.shp")
     route_df = gpd.read_file(route)
     route_df.crs = ({'init': 'epsg:4269'})
 
